@@ -1,29 +1,27 @@
 # tsbench
 
-Hi there, this is the repository for the *tsbench* Practical Work Seminar at JKU Linz. 
-
-The supervisors are Maximilian Beck, Oleksandra (Sasha) Prudnikova, Andreas Auer and Korbinian Pöppel.
+Hi there, this is a repository I created for the *tsbench* Practical Work Seminar at JKU Linz.
 
 ## Setup
 
 1. Setup a conda environment with `environment_pt2.1.0cu118` or `environment_pt2.1.0cu121`. Depending on our Nvidia GPU driver.
-2. Highly recommendend: Use Microsoft Visual Studio Code for developing. 
+2. Highly recommendend: Use Microsoft Visual Studio Code for developing.
 
 ## Quick Start Guide
 
 In order to get started, please have a look at the tutorial notebooks in `notebooks/tutorials` and go through them in the specified order.
 What you see is the process it needs to go from raw data (in this case a .csv file) to learning curves.
 
-After you have gone over these tutorials, run your first experiments. 
-For this, have a look at the folder `notebooks/experiments`. There you will find notebooks with runnable experiment configs. 
+After you have gone over these tutorials, run your first experiments.
+For this, have a look at the folder `notebooks/experiments`. There you will find notebooks with runnable experiment configs.
 Executing the cells in this notebooks will copy these configs into the `configs` folder. You might need to create the `configs/` folder in the repository root first.
 
-From there you can run those experiments by executing this command which will run a transformer architecture on 
+From there you can run those experiments by executing this command which will run a transformer architecture on
 a sequential cifar dataset for example:
+
 ```
 CUDA_VISIBLE_DEVICES=0 python run.py --config-name sCF10-causalselfattention--lr_0.yaml
 ```
-
 
 ## Extending tslib
 
@@ -31,14 +29,15 @@ CUDA_VISIBLE_DEVICES=0 python run.py --config-name sCF10-causalselfattention--lr
 
 For large datasets the caching in the TargetGenerator might consume all memory available.
 Some ideas to avoid this:
-- `Chunk saving:` Chunk the dataset and save those chunks to disk. Keep track which samples are in which chunk and load the respective chunk on demand. 
-With random access (as a dataloader with `shuffle=True` does it) this might not be very efficient as it causes alot of loading from disk. 
+
+- `Chunk saving:` Chunk the dataset and save those chunks to disk. Keep track which samples are in which chunk and load the respective chunk on demand.
+With random access (as a dataloader with `shuffle=True` does it) this might not be very efficient as it causes alot of loading from disk.
 - `np.memmap`: As a more sophisticated and scalable solution one could use `np.memmap` (see [here](https://numpy.org/doc/stable/reference/generated/numpy.memmap.html)). This us used for LLM pretraining datasets and should be therefore scale to very large datasets (example: [EleutherAI&fairseq](https://github.com/EleutherAI/gpt-neox/blob/main/megatron/data/indexed_dataset.py)).
 - More ideas: For more caching ideas one could potentially also have a closer look at huggingface datasets how they solved this. They have similar problems with tokenization.
 
 ### Processing speed
 
-Andi Auer profiled an extended version of tslib (more transformations implemented): 
+Andi Auer profiled an extended version of tslib (more transformations implemented):
 
 ```
 [16:04:44] [INFO] [dku.utils]  -    1178.89 partition_getitem
